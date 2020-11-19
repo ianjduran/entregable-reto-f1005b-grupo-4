@@ -157,11 +157,11 @@ yunit = radio * sin(th);
 %Se grafican los círculos trasladados, solo se grafica si el círculo se
 %encuentra dentro de los límites de la curva
 if(xCentro1>X0 && xCentro1<XF)
-    circulo = plot(xunit+xCentro1, yunit+yCentro1,'g', ...
+    plot(xunit+xCentro1, yunit+yCentro1,'g', ...
         "DisplayName", "Círculo que define la curvatura");
 end
 if(xCentro2>X0 && xCentro2 < XF)
-    circulo = plot(xunit+xCentro2, yunit+yCentro2,'g', ...
+    plot(xunit+xCentro2, yunit+yCentro2,'g', ...
         "DisplayName", "Círculo que define la curvatura");
 end
 
