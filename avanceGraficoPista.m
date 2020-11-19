@@ -1,10 +1,10 @@
 %% AUTORES GRUPO 4
 %{
     Ian Javier Duran Román - A00829799
-    Santiago Andrés Serrano Vacca
-    Alan Antonio De la Cruz Téllez
-    Josué Caleb Acosta de la Rosa
-    Maximiliano Zerecero Rodríguez
+    Santiago Andrés Serrano Vacca - A01734988
+    Alan Antonio De la Cruz Téllez - A01280638
+    Josué Caleb Acosta de la Rosa - A01383048
+    Maximiliano Zerecero Rodríguez - A00830773
 %}
 
 %% Inicialización
@@ -79,7 +79,10 @@ end
 disp("Ecuacion:");
 disp(eqn);
 disp("Lista de coeficientes:");
-disp(double(coef));
+fprintf("a3: %.10f\n", coef(1));
+fprintf("a2: %.7f\n", coef(2));
+fprintf("a1: %f\n", coef(3));
+fprintf("a0: %f\n\n", coef(4));
 disp("Longitud:");
 disp(arco);
 disp("Puntos Críticos:");
@@ -174,4 +177,3 @@ function radius = calc_radius (func, punto)
     radioCurvatura = matlabFunction(((1 + diff(func))^(3/2) ) / diff(diff(func)));
     radius = abs(radioCurvatura(punto));
 end
-
