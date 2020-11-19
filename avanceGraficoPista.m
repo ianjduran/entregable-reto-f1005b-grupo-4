@@ -72,10 +72,15 @@ while(ecuationFound==false)
         disp("No se hallaron las coordenadas");
         ecuationFound = false;
     end
+    
+    % Se encuentran los puntos (las coordenadas en X de estos puntos, para
+    % ser exactos) donde el radio de curvatura es igual a 50
+    puntosRadio50 = ZonasDeDerrape.xRadio50(eqn);
 end
 
 %% IMPRESIÓN DE DATOS IMPORTANTES
 
+fprintf("\n");
 disp("Ecuacion:");
 disp(eqn);
 disp("Lista de coeficientes:");
@@ -92,6 +97,10 @@ disp(radio);
 disp("Coordenadas: ")
 disp("(" + num2str(X1) + "," + num2str(Y1)+ ")");
 disp("(" + num2str(X2) + "," + num2str(Y2)+ ")");
+fprintf("\n");
+disp("Zonas de derrape (en intervalos):")
+fprintf("%f <= x <= %f\n", puntosRadio50(1), puntosRadio50(2));
+fprintf("%f <= x <= %f\n", puntosRadio50(3), puntosRadio50(4));
 
 %% GRAFICACION DE LA CURVA
 
@@ -111,6 +120,10 @@ plot(X0,Y0, 'ro');
 plot(XF,YF, 'ko');
 plot(X1,Y1, 'bo');
 plot(X2,Y2, 'bo');
+
+% Se escribe la leyenda de la gráfica
+legend('Curva','Punto inicial','Punto final','Punto intermedio', ...
+       'Punto intermedio')
 
 %% DIBUJO DE CIRCULOS SOBREPUESTOS EN LA GRÁFICA
 
@@ -144,17 +157,13 @@ yunit = radio * sin(th);
 %Se grafican los círculos trasladados, solo se grafica si el círculo se
 %encuentra dentro de los límites de la curva
 if(xCentro1>X0 && xCentro1<XF)
-    plot(xunit+xCentro1, yunit+yCentro1,'g');
+    circulo = plot(xunit+xCentro1, yunit+yCentro1,'g', ...
+        "DisplayName", "Círculo que define la curvatura");
 end
 if(xCentro2>X0 && xCentro2 < XF)
-    plot(xunit+xCentro2, yunit+yCentro2,'g');
+    circulo = plot(xunit+xCentro2, yunit+yCentro2,'g', ...
+        "DisplayName", "Círculo que define la curvatura");
 end
-
-hold off
-
-% Se escribe la leyenda de la gráfica
-legend('Curva','Punto inicial','Punto final','Punto intermedio', ...
-       'Punto intermedio','Circulos que definen la curvatura')
 
 
 % Puede escribir los resultados en un archivo
@@ -163,6 +172,32 @@ fileID = fopen('coefs.txt','w');
 fprintf(fileID,'%s\n',eqn);
 fclose(fileID);
 %}
+
+%% DIBUJO DE ZONAS DE DERRAPE EN LA GRÁFICA
+
+% Se grafican las zonas de derrape solo si están dentro de los límites de
+% la curva (si una parte está dentro de los límites, se grafica esa parte)
+if puntosRadio50(1) < X0
+    if puntosRadio50(2) > X0
+        fplot(eqn, [X0, puntosRadio50(2)], "Color", "red", ...
+            "DisplayName", "Zona de derrape");
+    end
+else
+    fplot(eqn, [puntosRadio50(1) puntosRadio50(2)], "Color", "red", ...
+        "DisplayName", "Zona de derrape");
+end
+
+if puntosRadio50(4) > XF
+    if puntosRadio50(3) < XF
+        fplot(eqn, [puntosRadio50(3), XF], "Color", "red", ...
+            "DisplayName", "Zona de derrape");
+    end
+else
+    fplot(eqn, [puntosRadio50(3) puntosRadio50(4)], "Color", "red", ...
+        "DisplayName", "Zona de derrape");
+end
+
+hold off
 
 %% DEFINICION DE FUNCIONES
 
