@@ -98,8 +98,8 @@ disp("(" + num2str(X1) + "," + num2str(Y1)+ ")");
 disp("(" + num2str(X2) + "," + num2str(Y2)+ ")");
 fprintf("\n");
 disp("Zonas de derrape (en intervalos):")
-fprintf("%f <= x <= %f\n", puntosRadio50(1), puntosRadio50(2));
-fprintf("%f <= x <= %f\n", puntosRadio50(3), puntosRadio50(4));
+fprintf("%f <= x <= %f\n", puntosRadio50(1), puntosCriticos(1));
+fprintf("%f <= x <= %f\n", puntosRadio50(3), puntosCriticos(2));
 
 %% GRAFICACION DE LA CURVA
 
