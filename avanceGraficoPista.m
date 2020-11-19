@@ -75,9 +75,8 @@ while(ecuationFound==false)
     
     % Se encuentran los puntos (las coordenadas en X de estos puntos, para
     % ser exactos) donde el radio de curvatura es igual a 50
-    puntosRadio50 = ZonasDeDerrape.xRadio50(eqn);
 end
-
+    puntosRadio50 = ZonasDeDerrape.xRadio50(eqn);
 %% IMPRESIÓN DE DATOS IMPORTANTES
 
 fprintf("\n");
@@ -209,6 +208,6 @@ end
 % Funcion que determina el radio de curvatura de una ecuacion dado un punto
 % de la ecuacion
 function radius = calc_radius (func, punto)
-    radioCurvatura = matlabFunction(((1 + diff(func))^(3/2) ) / diff(diff(func)));
+    radioCurvatura = matlabFunction(((1 + (diff(func)^2))^(3/2) ) / diff(diff(func)));
     radius = abs(radioCurvatura(punto));
 end
