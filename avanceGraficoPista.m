@@ -72,11 +72,11 @@ while(ecuationFound==false)
         disp("No se hallaron las coordenadas");
         ecuationFound = false;
     end
-    
+end
     % Se encuentran los puntos (las coordenadas en X de estos puntos, para
     % ser exactos) donde el radio de curvatura es igual a 50
-end
     puntosRadio50 = ZonasDeDerrape.xRadio50(eqn);
+    
 %% IMPRESIÓN DE DATOS IMPORTANTES
 
 fprintf("\n");
@@ -177,22 +177,22 @@ fclose(fileID);
 % Se grafican las zonas de derrape solo si están dentro de los límites de
 % la curva (si una parte está dentro de los límites, se grafica esa parte)
 if puntosRadio50(1) < X0
-    if puntosRadio50(2) > X0
-        fplot(eqn, [X0, puntosRadio50(2)], "Color", "red", ...
+    if puntosCriticos(1) > X0
+        fplot(eqn, [X0, puntosCriticos(1)], "Color", "red", ...
             "DisplayName", "Zona de derrape");
     end
 else
-    fplot(eqn, [puntosRadio50(1) puntosRadio50(2)], "Color", "red", ...
+    fplot(eqn, [puntosRadio50(1) puntosCriticos(1)], "Color", "red", ...
         "DisplayName", "Zona de derrape");
 end
 
-if puntosRadio50(4) > XF
+if puntosCriticos(2) > XF
     if puntosRadio50(3) < XF
         fplot(eqn, [puntosRadio50(3), XF], "Color", "red", ...
             "DisplayName", "Zona de derrape");
     end
 else
-    fplot(eqn, [puntosRadio50(3) puntosRadio50(4)], "Color", "red", ...
+    fplot(eqn, [puntosRadio50(3) puntosCriticos(2)], "Color", "red", ...
         "DisplayName", "Zona de derrape");
 end
 
