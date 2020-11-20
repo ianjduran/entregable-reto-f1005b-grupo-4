@@ -168,7 +168,7 @@ zonaDerrapeX1 = [];
 zonaDerrapeY1 = [];
 % Se ejecuta si es que el punto mínimo local se encuentra dentro de la
 % curva
-if(punto_min_max_1>X0)
+if(punto_min_max_1>=X0)
     % Se considera hallar desde el primer punto crítico, al principio de la
     % curva, ya que el carro viene desde la izquierda.
     [zonaDerrapeX1, zonaDerrapeY1]= hallar_zona_derrape(ecuacion_modelo, ...
@@ -182,7 +182,7 @@ end
 zonaDerrapeX2 = [];
 zonaDerrapeY2 = [];
 
-if(punto_min_max_2<XF)
+if(punto_min_max_2<=XF)
      [zonaDerrapeX2, zonaDerrapeY2] = hallar_zona_derrape(ecuacion_modelo, ...
      punto_min_max_2, X0);
     plot(zonaDerrapeX2,zonaDerrapeY2, 'r','LineWidth',2);
@@ -195,7 +195,22 @@ disp(length(zonaDerrapeX1));
 disp("Zona Derrape2: ")
 disp(length(zonaDerrapeX2));
 
+modificador_tamanio_tangente = 4;
+if(~isempty(zonaDerrapeX1))
+    dCurva=matlabFunction(diff(ecuacion_modelo));
+    slope = dCurva(zonaDerrapeX1(1));
+    x_primer_punto_critico = 0:(XF-X0)/modificador_tamanio_tangente;
+    y_primer_punto_critico = (slope*x_primer_punto_critico);
+    plot(x_primer_punto_critico+zonaDerrapeX1(1),y_primer_punto_critico+zonaDerrapeY1(1))
+end
 
+if(~isempty(zonaDerrapeX2)>0)
+    dCurva=matlabFunction(diff(ecuacion_modelo));
+    slope = dCurva(zonaDerrapeX2(1));
+    x_segundo_punto_critico = 0:(XF-X0)/modificador_tamanio_tangente;
+    y_segundo_punto_critico = (slope*x_primer_punto_critico);
+    plot(x_segundo_punto_critico+zonaDerrapeX2(1),y_segundo_punto_critico+zonaDerrapeY2(1))
+end
 
 hold off
 
@@ -237,7 +252,9 @@ function [lista_coordenadas_x, lista_coordenadas_y] = ...
     end
     % Se obtiene la lista de coordenadas en Y al evaluar la lista de
     % coordenadas en X
-    lista_coordenadas_y = funcion_curva(lista_coordenadas_x);
+    if(~isempty(lista_x))
+        lista_coordenadas_y = funcion_curva(lista_x);
+    end
 end
 
 %Funcion que halla y devuelve los puntos maximos y minimos locales de la
