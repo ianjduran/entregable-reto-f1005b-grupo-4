@@ -65,7 +65,10 @@ while(ecuationFound==false)
     % Se verifica si la ecuacion cumple con las condiciones necesarias
          % Curvatura de radio < 50
          % 300 < longitud de arco < 500
-    if(radio<50 && (arco> 300 && arco<500))
+         % Ambos puntos criticos de la ecuacion se encuentran en el rango
+         % de los puntos en X
+        
+    if(radio<50 && (arco> 300 && arco<500) && punto_min_max_1>=X0 && punto_min_max_2<=XF)
         disp("¡Coordenadas encontradas!");
         ecuationFound = true;
     else
