@@ -68,7 +68,7 @@ while(ecuationFound==false)
          % Ambos puntos criticos de la ecuacion se encuentran en el rango
          % de los puntos en X
         
-    if(radio<50 && (arco> 300 && arco<500) && punto_min_max_1>=X0 && punto_min_max_2<=XF)
+    if(radio<50 && (arco> 300 && arco<500) && (min(punto_min_max_1,punto_min_max_2)-X0)>20 && (XF-max(punto_min_max_1,punto_min_max_2))>20)
         disp("¡Coordenadas encontradas!");
         ecuationFound = true;
     else
@@ -199,12 +199,20 @@ disp("Zona Derrape2: ")
 disp(length(zonaDerrapeX2));
 
 modificador_tamanio_tangente = 4;
+distGradasY=20;
+distGradasX=-20;
 if(~isempty(zonaDerrapeX1))
     dCurva=matlabFunction(diff(ecuacion_modelo));
     slope = dCurva(zonaDerrapeX1(1));
     x_primer_punto_critico = 0:(XF-X0)/modificador_tamanio_tangente;
     y_primer_punto_critico = (slope*x_primer_punto_critico);
     plot(x_primer_punto_critico+zonaDerrapeX1(1),y_primer_punto_critico+zonaDerrapeY1(1))
+    
+    if(zonaDerrapeY1(1)< zonaDerrapeY2(1))
+        distGradasY = distGradasY *( -1);
+    end
+    plot(x_primer_punto_critico+zonaDerrapeX1(1)+ distGradasX,y_primer_punto_critico+zonaDerrapeY1(1) + distGradasY,'Color', [0.5 0.5 0.5] , 'lineWidth', 8)
+    
 end
 
 if(~isempty(zonaDerrapeX2)>0)
@@ -213,6 +221,10 @@ if(~isempty(zonaDerrapeX2)>0)
     x_segundo_punto_critico = 0:(XF-X0)/modificador_tamanio_tangente;
     y_segundo_punto_critico = (slope*x_primer_punto_critico);
     plot(x_segundo_punto_critico+zonaDerrapeX2(1),y_segundo_punto_critico+zonaDerrapeY2(1))
+    distGradas=20;
+    
+    
+    plot(x_segundo_punto_critico+zonaDerrapeX2(1)+ distGradasX,y_segundo_punto_critico+zonaDerrapeY2(1) - distGradasY,'Color', [0.5 0.5 0.5] , 'lineWidth', 8)
 end
 
 hold off
