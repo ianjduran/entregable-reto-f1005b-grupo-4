@@ -175,7 +175,7 @@ if(punto_min_max_1>=X0)
     % Se considera hallar desde el primer punto crítico, al principio de la
     % curva, ya que el carro viene desde la izquierda.
     [zonaDerrapeX1, zonaDerrapeY1]= hallar_zona_derrape(ecuacion_modelo, ...
-    punto_min_max_1, X0);
+    X0, punto_min_max_1, punto_min_max_2, 1);
     plot(zonaDerrapeX1,zonaDerrapeY1, 'r','LineWidth',2, "DisplayName", "Zona de derrape");
 end
 
@@ -187,7 +187,7 @@ zonaDerrapeY2 = [];
 
 if(punto_min_max_2<=XF)
      [zonaDerrapeX2, zonaDerrapeY2] = hallar_zona_derrape(ecuacion_modelo, ...
-     punto_min_max_2, X0);
+     XF, punto_min_max_2, punto_min_max_1, -1);
     plot(zonaDerrapeX2,zonaDerrapeY2, 'r','LineWidth',2, "DisplayName", "Zona de derrape");
 end
 
@@ -295,23 +295,28 @@ fclose(fileID);
 
 function [lista_coordenadas_x, lista_coordenadas_y] = ...
                                hallar_zona_derrape(eqn, ...
-                               punto_final, punto_inicial)
+                               punto_i, punto_intermedio, punto_f, paso)
     % Convierte la ecuacion para evaluarla en distintos puntos
     funcion_curva = matlabFunction(eqn);
     % Se inicializa la lista;
     lista_x = [];
     % Se recorre un ciclo que recorre de manera inversa los puntos, para
     % hallar desde el lado izquierdo el area de curvatura.
-    for punto = punto_final:-1:punto_inicial
+    for punto = punto_i:paso:punto_intermedio
+        if(calc_radius(eqn,punto)<=50)
+            lista_x = [lista_x punto];
+        end
+    end
+    for punto = punto_intermedio:paso:punto_f
         % Se añade un elemento al principio de la lista
-        lista_x = [punto lista_x];
+        lista_x = [lista_x punto];
         % Se deja de registrar los elementos que tengan una curvatura
         % mayor a 50
         if(calc_radius(eqn,punto)>50)
-            lista_coordenadas_x = lista_x;
             break;
         end
     end
+    lista_coordenadas_x = lista_x;
     % Se obtiene la lista de coordenadas en Y al evaluar la lista de
     % coordenadas en X
     if(~isempty(lista_x))
