@@ -304,12 +304,20 @@ function [lista_coordenadas_x, lista_coordenadas_y] = ...
     % hallar desde el lado izquierdo el area de curvatura.
     for punto = punto_i:paso:punto_intermedio
         if(calc_radius(eqn,punto)<=50)
-            lista_x = [lista_x punto];
+            if(paso>0)
+                lista_x = [lista_x punto];
+            else
+                lista_x = [punto lista_x];
+            end
         end
     end
     for punto = punto_intermedio:paso:punto_f
         % Se añade un elemento al principio de la lista
-        lista_x = [lista_x punto];
+        if(paso>0)
+                lista_x = [lista_x punto];
+        else
+                lista_x = [punto lista_x];
+        end
         % Se deja de registrar los elementos que tengan una curvatura
         % mayor a 50
         if(calc_radius(eqn,punto)>50)
