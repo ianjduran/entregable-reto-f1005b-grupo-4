@@ -70,6 +70,7 @@ while(ecuationFound==false)
         
     if(radio<50 && (arco> 300 && arco<500) && (min(punto_min_max_1,punto_min_max_2)-X0)>20 && (XF-max(punto_min_max_1,punto_min_max_2))>20)
         disp("¡Coordenadas encontradas!");
+        fprintf("\n");
         ecuationFound = true;
     else
         disp("No se hallaron las coordenadas");
@@ -79,7 +80,7 @@ end
 
 %% IMPRESIÓN DE DATOS IMPORTANTES
 
-disp("Ecuacion:");
+disp("Ecuación de la pista");
 disp(ecuacion_modelo);
 disp("Lista de coeficientes:");
 fprintf("a3: %.10f\n", coef(1));
@@ -89,14 +90,15 @@ fprintf("a0: %f\n\n", coef(4));
 disp("Longitud:");
 disp(arco);
 disp("Puntos Críticos:");
-disp("Minimo Funcion: " + num2str(punto_min_max_1) )
-disp("Maximo Funcion: " + num2str(punto_min_max_2) )
-
-disp("Radio de Curvatura:");
+disp("Mínimo Función: " + num2str(punto_min_max_1) )
+disp("Máximo Función: " + num2str(punto_min_max_2) )
+fprintf("\n");
+disp("Mínimo radio de curvatura:");
 disp(radio);
-disp("Coordenadas: ")
+disp("Coordenadas de puntos intermedios: ")
 disp("(" + num2str(X1) + "," + num2str(Y1)+ ")");
 disp("(" + num2str(X2) + "," + num2str(Y2)+ ")");
+fprintf("\n");
 
 %% GRAFICACION DE LA CURVA
 
@@ -193,9 +195,10 @@ end
 
 % Se despliega información sobre la cantidad de coordenadas que existe en
 % las zonas de derrape
+disp("Cantidad de coordenadas halladas por zona de derrape (método de Euler):")
 disp("Zona Derrape 1:")
 disp(length(zonaDerrapeX1));
-disp("Zona Derrape2: ")
+disp("Zona Derrape 2: ")
 disp(length(zonaDerrapeX2));
 
 modificador_tamanio_tangente = 4;
@@ -273,6 +276,11 @@ if(~isempty(zonaDerrapeX2)>0)
     fill(x12, y12, 'b', "DisplayName", "Gradas");
     
     disp("Ecuacion recta tangente 2: "+slope+"x + "+(zonaDerrapeY2(1)-slope*zonaDerrapeX2(1)));
+    
+    xRectTang = 140; % La recta tangente se calculará con este valor de x, puede cambiarse
+    [rectaTangenteXPos, m, b] = getRectaTangente(ecuacion_modelo, xRectTang);
+    fprintf("\nLa recta tangente al punto donde x = %f es: \ny = %fx + (%f)", xRectTang, m, b);
+    fprintf("\nEl punto x = %f se puede cambiar en código para hallar la recta tangente en cualquier punto de la pista. Es la variable xRectTang.", xRectTang);
 end
 
 hold off
@@ -378,4 +386,22 @@ function [xa,ya]=obtenerPuntosGradas(xInicial,yInicial,distanciaTotal, slope, de
         xa=apoyo+0.1;
     end
         ya=slope*xa+c;
+end
+
+function [rectaTangente, m, b] = getRectaTangente(curva, xPos)
+    syms x
+    coeficientes = coeffs(curva);
+    a1 = coeficientes(2);
+    a2 = coeficientes(3);
+    a3 = coeficientes(4);
+    % Derivada de la función de la curva
+    funcionPrima = @(x) 3*a3*x.^2 + 2*a2*x + a1;
+    % La recta es de la forma y = mx + b, hallamos b:
+    curvaMatlabFunction = matlabFunction(curva);
+    yPos = curvaMatlabFunction(xPos);
+    b = yPos - 3*a3*xPos.^3 - 2*a2*xPos.^2 - a1*xPos;
+    rectaTangente = funcionPrima(xPos)*x + b;
+    coefsRectaTangente = coeffs(rectaTangente);
+    b = coefsRectaTangente(1);
+    m = coefsRectaTangente(2);
 end
