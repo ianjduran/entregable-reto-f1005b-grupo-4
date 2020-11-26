@@ -276,12 +276,13 @@ if(~isempty(zonaDerrapeX2)>0)
     fill(x12, y12, 'b', "DisplayName", "Gradas");
     
     disp("Ecuacion recta tangente 2: "+slope+"x + "+(zonaDerrapeY2(1)-slope*zonaDerrapeX2(1)));
-    
-    xRectTang = 140; % La recta tangente se calculará con este valor de x, puede cambiarse
-    [rectaTangenteXPos, m, b] = getRectaTangente(ecuacion_modelo, xRectTang);
-    fprintf("\nLa recta tangente al punto donde x = %f es: \ny = %fx + (%f)", xRectTang, m, b);
-    fprintf("\nEl punto x = %f se puede cambiar en código para hallar la recta tangente en cualquier punto de la pista. Es la variable xRectTang.", xRectTang);
 end
+
+% Recta tangente en cualquier punto
+xRectTang = 140; % La recta tangente se calculará con este valor de x, puede cambiarse
+[rectaTangenteXPos, m, b] = getRectaTangente(ecuacion_modelo, xRectTang);
+fprintf("\nLa recta tangente al punto donde x = %f es: \ny = %fx + (%f)", xRectTang, m, b);
+fprintf("\nEl punto x = %f se puede cambiar en código para hallar la recta tangente en cualquier punto de la pista. Es la variable xRectTang.", xRectTang);
 
 hold off
 
