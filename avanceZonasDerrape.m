@@ -204,6 +204,7 @@ distGradasX=-20;
 if(~isempty(zonaDerrapeX1))
     dCurva=matlabFunction(diff(ecuacion_modelo));
     slope = dCurva(zonaDerrapeX1(1));
+    slopeInv =-1/slope;
     x_primer_punto_critico = 0:(XF-X0)/modificador_tamanio_tangente;
     y_primer_punto_critico = (slope*x_primer_punto_critico);
     plot(x_primer_punto_critico+zonaDerrapeX1(1),y_primer_punto_critico+zonaDerrapeY1(1))
@@ -211,20 +212,63 @@ if(~isempty(zonaDerrapeX1))
     if(zonaDerrapeY1(1)< zonaDerrapeY2(1))
         distGradasY = distGradasY *( -1);
     end
-    plot(x_primer_punto_critico+zonaDerrapeX1(1)+ distGradasX,y_primer_punto_critico+zonaDerrapeY1(1) + distGradasY,'Color', [0.5 0.5 0.5] , 'lineWidth', 8)
+    %Encontrar las 4 esquinas de las gradas
+    %punto 1
+    [xa,ya]=obtenerPuntosGradas(zonaDerrapeX1(1),zonaDerrapeY1(1),20, slopeInv, false);
+    x11(1)=xa;
+    y11(1)=ya;
+    %punto2
+   [xa,ya]=obtenerPuntosGradas(x11(1),y11(1),10, slopeInv,false);
+   x11(2)=xa;
+    y11(2)=ya;
+    %punto 3
+    [xa,ya]=obtenerPuntosGradas(x11(2),y11(2),80, slope,true);
+    x11(3)=xa;
+    y11(3)=ya;
+    %punto 4
+   [xa,ya]=obtenerPuntosGradas(x11(3),y11(3),10, slopeInv,true);
+   x11(4)=xa;
+    y11(4)=ya;
+    
+    line(x11, y11);
+    hold on;
+    fill(x11, y11, 'b');
+    
+    %plot(x_primer_punto_critico+zonaDerrapeX1(1)+ distGradasX,y_primer_punto_critico+zonaDerrapeY1(1) + distGradasY,'Color', [0.5 0.5 0.5] , 'lineWidth', 8)
     
 end
 
 if(~isempty(zonaDerrapeX2)>0)
     dCurva=matlabFunction(diff(ecuacion_modelo));
     slope = dCurva(zonaDerrapeX2(1));
+    slopeInv =-1/slope;
     x_segundo_punto_critico = 0:(XF-X0)/modificador_tamanio_tangente;
     y_segundo_punto_critico = (slope*x_primer_punto_critico);
     plot(x_segundo_punto_critico+zonaDerrapeX2(1),y_segundo_punto_critico+zonaDerrapeY2(1))
     distGradas=20;
     
     
-    plot(x_segundo_punto_critico+zonaDerrapeX2(1)+ distGradasX,y_segundo_punto_critico+zonaDerrapeY2(1) - distGradasY,'Color', [0.5 0.5 0.5] , 'lineWidth', 8)
+    %Encontrar las 4 esquinas de las gradas
+    %punto 1
+    [xa,ya]=obtenerPuntosGradas(zonaDerrapeX2(1),zonaDerrapeY2(1),20, slopeInv, false);
+    x12(1)=xa;
+    y12(1)=ya;
+    %punto2
+   [xa,ya]=obtenerPuntosGradas(x12(1),y12(1),10, slopeInv,false);
+   x12(2)=xa;
+    y12(2)=ya;
+    %punto 3
+    [xa,ya]=obtenerPuntosGradas(x12(2),y12(2),80, slope,true);
+    x12(3)=xa;
+    y12(3)=ya;
+    %punto 4
+   [xa,ya]=obtenerPuntosGradas(x12(3),y12(3),10, slopeInv,true);
+   x12(4)=xa;
+    y12(4)=ya;
+    
+    line(x12, y12);
+    hold on;
+    fill(x12, y12, 'b');
 end
 
 hold off
@@ -233,7 +277,7 @@ hold off
 legend('Curva','Punto inicial','Punto final','Punto intermedio', ...
        'Punto intermedio','Circulos que definen la curvatura', ...
        'Circulo que define la curvatura', 'Zona de derrape', ...
-       'Zona de derrape', 'tangente', 'grada', 'tangente', 'gradas',...
+       'Zona de derrape', 'tangente', 'grada', 'gradas', 'tangente',...
        'Location','northeastoutside')
 
 
@@ -294,4 +338,31 @@ end
 function radius = calc_radius (func, punto)
     radioCurvatura = matlabFunction(((1 + (diff(func)^2))^(3/2) ) / diff(diff(func)));
     radius = abs(radioCurvatura(punto));
+end
+
+function [xa,ya]=obtenerPuntosGradas(xInicial,yInicial,distanciaTotal, slope, derecha)
+   
+    c=yInicial-slope*xInicial;
+    
+    apoyo=xInicial;
+    
+    distancia=sqrt((xInicial-apoyo)^2+(yInicial-(slope*apoyo+c))^2);
+    while (distancia<distanciaTotal)
+        distancia=sqrt((xInicial-apoyo)^2+(yInicial-(slope*apoyo+c))^2);
+        if (derecha==true)
+            
+            apoyo=apoyo+0.1;
+        end
+        if (derecha==false)
+            
+            apoyo=apoyo-0.1;
+        end
+    end
+    if (derecha==true)
+        xa=apoyo-0.1;
+    end
+    if (derecha==false)
+        xa=apoyo+0.1;
+    end
+        ya=slope*xa+c;
 end
