@@ -22,7 +22,20 @@ Y0 = 290;
 XF = 280;
 YF = 120;
 ecuationFound = false;
+G = 9.81;
+coef_friccion=0;
 
+% Obtencion de variables por teclado
+disp("Seleccione el tipo de asfalto");
+disp("1: Seco");
+disp("2: Mojado");
+seleccion_coef = input("Opcion: ");
+velocidad_carro = input("Ingrese la velocidad del carro: ");
+if(seleccion_coef==1)
+    coef_friccion = 0.8;
+else
+    coef_friccion = 0.4;
+end
 %% CALCULO DE COORDENADAS
 while(ecuationFound==false)
     
@@ -282,13 +295,30 @@ end
 xRectTang = 140; % La recta tangente se calculará con este valor de x, puede cambiarse
 [rectaTangenteXPos, m, b] = getRectaTangente(ecuacion_modelo, xRectTang);
 fprintf("\nLa recta tangente al punto donde x = %f es: \ny = %fx + (%f)", xRectTang, m, b);
-fprintf("\nEl punto x = %f se puede cambiar en código para hallar la recta tangente en cualquier punto de la pista. Es la variable xRectTang.", xRectTang);
+fprintf("\nEl punto x = %f se puede cambiar en código para hallar la recta tangente en cualquier punto de la pista. Es la variable xRectTang.\n", xRectTang);
 
 hold off
 
 % Se escribe la leyenda de la gráfica
 legend('Location','northeastoutside')
 
+%PRUEBA OBTENCION VELOCIDAD
+puntos_lista_velocidad = X0:XF;
+lista_velocidad = obtener_velocidad(ecuacion_modelo, zonaDerrapeX1, coef_friccion, G);
+velocidad_maxima_permitida = min(lista_velocidad);
+
+
+%disp("lista velocidad")
+%disp(lista_velocidad);
+
+if(velocidad_carro>velocidad_maxima_permitida)
+    disp("El carro se sale de la pista");
+else
+    disp("El carro se mantiene en la pista");
+end
+
+disp("Velocidad maxima permitida en la zona de riesgo")
+disp(velocidad_maxima_permitida)
 
 % En caso que se requiera, se pueden almacenar los resultados en un archivo
 %{
@@ -406,3 +436,9 @@ function [rectaTangente, m, b] = getRectaTangente(curva, xPos)
     b = coefsRectaTangente(1);
     m = coefsRectaTangente(2);
 end
+
+function [velocidad] = obtener_velocidad(eqn, punto_x, coef_friccion, G)
+    radio = calc_radius(eqn,punto_x);
+    velocidad = sqrt(radio*G*coef_friccion);
+end
+
