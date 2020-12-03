@@ -222,7 +222,7 @@ classdef finalfinal_exported < matlab.apps.AppBase
                      % 300 < longitud de arco < 500
                      % Ambos puntos criticos de la ecuacion se encuentran en el rango
                      % de los puntos en X
-                if(radio1<50 && radio2<50 && (arco> 300 && arco<500) && (min(punto_min_max_1,punto_min_max_2)-X0)>20 && (XF-max(punto_min_max_1,punto_min_max_2))>20)
+                if((radio1<50 || radio2<50) && (arco> 300 && arco<500) && (min(punto_min_max_1,punto_min_max_2)-X0)>20 && (XF-max(punto_min_max_1,punto_min_max_2))>20)
                     ecuationFound = true;
                 else
                     app.EcuacindelacurvaLabel.Text="Ecuacion de la curva: Cargando...";
