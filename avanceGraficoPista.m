@@ -23,9 +23,11 @@ XF = 280;
 YF = 120;
 ecuationFound = false;
 G = 9.81;
-coef_friccion=0;
+coef_friccion=0.8;
+velocidad_carro = 20;
 
 % Obtencion de variables por teclado
+%{
 disp("Seleccione el tipo de asfalto");
 disp("1: Seco");
 disp("2: Mojado");
@@ -36,6 +38,9 @@ if(seleccion_coef==1)
 else
     coef_friccion = 0.4;
 end
+%}
+coef_friccion = 0.8;
+
 %% CALCULO DE COORDENADAS
 while(ecuationFound==false)
     
@@ -223,7 +228,7 @@ if(~isempty(zonaDerrapeX1))
     slopeInv =-1/slope;
     x_primer_punto_critico = 0:(XF-X0)/modificador_tamanio_tangente;
     y_primer_punto_critico = (slope*x_primer_punto_critico);
-    plot(x_primer_punto_critico+zonaDerrapeX1(1),y_primer_punto_critico+zonaDerrapeY1(1), "DisplayName", "Tangente", "Color", [0.59 0.57 0])
+    %plot(x_primer_punto_critico+zonaDerrapeX1(1),y_primer_punto_critico+zonaDerrapeY1(1), "DisplayName", "Tangente", "Color", [0.59 0.57 0])
     
     if(zonaDerrapeY1(1)< zonaDerrapeY2(1))
         distGradasY = distGradasY *( -1);
@@ -246,9 +251,9 @@ if(~isempty(zonaDerrapeX1))
    x11(4)=xa;
     y11(4)=ya;
     
-    line(x11, y11, "HandleVisibility", "Off");
+    %line(x11, y11, "HandleVisibility", "Off");
     hold on;
-    fill(x11, y11, 'b', "DisplayName", "Gradas");
+    %fill(x11, y11, 'b', "DisplayName", "Gradas");
     
     disp("Ecuacion recta tangente 1: "+slope+"x + "+(zonaDerrapeY1(1)-slope*zonaDerrapeX1(1)));
     
@@ -262,7 +267,7 @@ if(~isempty(zonaDerrapeX2)>0)
     slopeInv =-1/slope;
     x_segundo_punto_critico = 0:(XF-X0)/modificador_tamanio_tangente;
     y_segundo_punto_critico = (slope*x_primer_punto_critico);
-    plot(x_segundo_punto_critico+zonaDerrapeX2(1),y_segundo_punto_critico+zonaDerrapeY2(1), "DisplayName", "Tangente", "Color", [0.59 0.57 0]);
+    %plot(x_segundo_punto_critico+zonaDerrapeX2(1),y_segundo_punto_critico+zonaDerrapeY2(1), "DisplayName", "Tangente", "Color", [0.59 0.57 0]);
     distGradas=20;
     
     
@@ -284,9 +289,9 @@ if(~isempty(zonaDerrapeX2)>0)
    x12(4)=xa;
     y12(4)=ya;
     
-    line(x12, y12, "HandleVisibility", "Off");
+    %line(x12, y12, "HandleVisibility", "Off");
     hold on;
-    fill(x12, y12, 'b', "DisplayName", "Gradas");
+    %fill(x12, y12, 'b', "DisplayName", "Gradas");
     
     disp("Ecuacion recta tangente 2: "+slope+"x + "+(zonaDerrapeY2(1)-slope*zonaDerrapeX2(1)));
 end
