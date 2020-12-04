@@ -18,7 +18,7 @@ classdef solucionReto_exported < matlab.apps.AppBase
         CrearelferrarisolodespuesdecreadaydibujadalacurvaLabel  matlab.ui.control.Label
         VelocidadanimacionSliderLabel   matlab.ui.control.Label
         VelocidadanimacionSlider        matlab.ui.control.Slider
-        VelocidadmaximaenpuntoactualLabel  matlab.ui.control.Label
+        VelmxpermitidaenpuntoactualLabel  matlab.ui.control.Label
         EstadoLabel                     matlab.ui.control.Label
         EnergiaPerdidaLabel             matlab.ui.control.Label
         MasadelferrarikgEditFieldLabel  matlab.ui.control.Label
@@ -34,7 +34,7 @@ classdef solucionReto_exported < matlab.apps.AppBase
         Zonadederrape1Label             matlab.ui.control.Label
         Zonadederrape2Label             matlab.ui.control.Label
         RadiodeCurvatura2Label          matlab.ui.control.Label
-        VelocidadMaximaentodalapistaLabel  matlab.ui.control.Label
+        VelmxpermitidaenzonadederrapeLabel  matlab.ui.control.Label
         UIAxes                          matlab.ui.control.UIAxes
     end
 
@@ -167,6 +167,7 @@ classdef solucionReto_exported < matlab.apps.AppBase
         % Button pushed function: CrearcurvaButton
         function CrearcurvaButtonPushed(app, event)
             
+            
             % Inicialización de puntos y variable para manejar el ciclo
             X0 = 10;
             Y0 = 290;
@@ -228,11 +229,11 @@ classdef solucionReto_exported < matlab.apps.AppBase
                     app.PuntomaximoLabel.Text= "Punto maximo: Cargando...";
                     app.PuntominimoLabel.Text="Punto minimo: Cargando...";
                     app.LongitudLabel.Text="Longitud: Cargando...";
-                    app.RadiodeCurvatura1Label.Text="Radio de curvatura 1: Cargando";
-                    app.RadiodeCurvatura2Label.Text="Radio de curvatura 2: Cargando";
+                    app.RadiodeCurvatura1Label.Text="Radio de curvatura 1: Cargando...";
+                    app.RadiodeCurvatura2Label.Text="Radio de curvatura 2: Cargando...";
                     app.Zonadederrape1Label.Text="Zona de derrape 1: Cargando...";
                     app.Zonadederrape2Label.Text="Zona de derrape 2: Cargando...";
-                    app.VelocidadMaximaentodalapistaLabel.Text="Velocidad Maxima en toda la pista: Cargando...";
+                    app.VelmxpermitidaenzonadederrapeLabel.Text="Vel. máx. permitida en zona de derrape: Cargando...";
                     drawnow;
                     ecuationFound = false;
                 end
@@ -266,7 +267,7 @@ classdef solucionReto_exported < matlab.apps.AppBase
             app.PuntominimoLabel.Text="Punto minimo: ("+num2str(xMin)+", "+num2str(yMin)+")";
             app.RadiodeCurvatura1Label.Text="Radio de curvatura 1: "+num2str(radio1);
             app.RadiodeCurvatura2Label.Text="Radio de curvatura 2: "+num2str(radio2);
-            drawnow;
+            %drawnow;
             
             %% GRAFICACION DE LA CURVA
                                     
@@ -276,7 +277,7 @@ classdef solucionReto_exported < matlab.apps.AppBase
                               -40,... 
                               400])
             
-            hold(app.UIAxes);
+            hold(app.UIAxes, 'on');
             
             % plot for the trajectory
             fplot(app.UIAxes, ecuacion_modelo, [X0 XF], 'lineWidth', 1, "DisplayName", "Curva");
@@ -322,7 +323,7 @@ classdef solucionReto_exported < matlab.apps.AppBase
             % las zonas de derrape
             app.Zonadederrape1Label.Text="Zona de derrape 1: ("+num2str(zonaDerrapeX1(1))+", "+num2str(zonaDerrapeX1(length(zonaDerrapeX1)))+")";
             app.Zonadederrape2Label.Text="Zona de derrape 2: ("+num2str(zonaDerrapeX2(1))+", "+num2str(zonaDerrapeX2(length(zonaDerrapeX2)))+")";
-            drawnow;
+            %drawnow;
             
             modificador_tamanio_tangente = 4;
             distGradasY=20;
@@ -404,7 +405,7 @@ classdef solucionReto_exported < matlab.apps.AppBase
             
             lista_velocidad = obtener_velocidad(app,ecuacion_modelo, zonaDerrapeX1, str2num(char(extractBetween(app.Friccion08miuLabel.Text,": "," miu"))), 9.81);
             velocidad_maxima_permitida = min(lista_velocidad);
-            app.VelocidadMaximaentodalapistaLabel.Text="Velocidad Maxima en toda la pista: "+num2str(velocidad_maxima_permitida)+"ms^1";
+            app.VelmxpermitidaenzonadederrapeLabel.Text="Vel. máx. permitida en zona de derrape: "+num2str(velocidad_maxima_permitida)+" m/s";
                     
             hold off
             
@@ -434,14 +435,18 @@ classdef solucionReto_exported < matlab.apps.AppBase
             puntos_lista_velocidad = 10:290;
             if(value=="Off")
                 app.Friccion08miuLabel.Text="Friccion: 0.8 miu";
-                lista_velocidad = obtener_velocidad(app,str2sym(app.EcuacionText.Text), puntos_lista_velocidad, 0.8, 9.81);        
+                lista_velocidad = obtener_velocidad(app,str2sym(app.EcuacionText.Text), ...
+                    puntos_lista_velocidad, 0.8, 9.81);        
             else
                 app.Friccion08miuLabel.Text="Friccion: 0.4 miu";
-                lista_velocidad = obtener_velocidad(app,str2sym(app.EcuacionText.Text), puntos_lista_velocidad, 0.4, 9.81);
+                lista_velocidad = obtener_velocidad(app,str2sym(app.EcuacionText.Text), ...
+                    puntos_lista_velocidad, 0.4, 9.81);
             end
 
             velocidad_maxima_permitida = min(lista_velocidad);
-            app.VelocidadMaximaentodalapistaLabel.Text="Velocidad Maxima en toda la pista: "+num2str(velocidad_maxima_permitida)+"ms^1";
+            app.VelmxpermitidaenzonadederrapeLabel.Text = ...
+                "Velocidad Maxima en toda la pista: " + ...
+                num2str(velocidad_maxima_permitida)+"ms^1";
         end
 
         % Button pushed function: CrearferrariButton
@@ -470,34 +475,45 @@ classdef solucionReto_exported < matlab.apps.AppBase
             
             p = plot(app.UIAxes,x,y,'o','MarkerFaceColor','red');
             
-            derrapeEmpieza1=str2num(char(extractBetween(app.Zonadederrape1Label.Text,"(",",")));
-            derrapeTermina1=str2num(char(extractBetween(app.Zonadederrape1Label.Text,", ",")")));
-            derrapeEmpieza2=str2num(char(extractBetween(app.Zonadederrape2Label.Text,"(",",")));
-            derrapeTermina2=str2num(char(extractBetween(app.Zonadederrape2Label.Text,", ",")")));
+            derrapeEmpieza1 = str2num(char(extractBetween(app.Zonadederrape1Label.Text,"(",",")));
+            derrapeTermina1 = str2num(char(extractBetween(app.Zonadederrape1Label.Text,", ",")")));
+            derrapeEmpieza2 = str2num(char(extractBetween(app.Zonadederrape2Label.Text,"(",",")));
+            derrapeTermina2 = str2num(char(extractBetween(app.Zonadederrape2Label.Text,", ",")")));
             
-            % Move the marker along the line by updating the |XData| and |YData| properties 
-            % in a loop. Use a <docid:matlab_ref.f56-719157 docid:matlab_ref.f56-719157> or 
-            % |drawnow limitrate| command to display the updates on the screen. |drawnow limitrate| 
-            % is fastest, but it might not draw every frame on the screen. Use dot notation to set properties. 
+            %{
+                Mueve el marcador del punto a lo largo de la linea
+                actualizando el valor de sus coordenadas X y Y en un ciclo.
+            %}
+
             i=x+1;
             x=i;
             salir=false;
             while i<XF && salir==false
                 rapidez=app.VelocidadanimacionSlider.Value;
-                velMax=obtener_velocidad(app, str2sym(app.EcuacionText.Text), x, coef_friccion, G);
+                velMax=obtener_velocidad(app, ...
+                                        str2sym(app.EcuacionText.Text), ...
+                                        x, coef_friccion, G);
                 p.XData = i;
                 y=ecuacionCurva(i);
                 p.YData = y;
-                app.PuntoactualLabel.Text="Punto actual: ("+num2str(x)+", "+num2str(y)+")";
-                app.VelocidadmaximaenpuntoactualLabel.Text="Velocidad maxima en punto actual: "+num2str(velMax);
+                app.PuntoactualLabel.Text="Punto actual: (" + ...
+                                          num2str(x)+", "+num2str(y)+")";
+                app.VelmxpermitidaenpuntoactualLabel.Text= ...
+                    "Vel. máx permitida en punto actual: " + ...
+                    num2str(velMax);
                 app.EstadoLabel.Text="Estado: En curso";
                 app.EnergiaPerdidaLabel.Text="Energia perdida: 0J";
                 app.DistanciaderrapadaLabel.Text="Distancia derrapada: 0m";
                 drawnow;
                 pause(rapidez);
                 
-                if velocidad>velMax && ((x>=derrapeEmpieza1 && x<=derrapeTermina1) || (x>=derrapeEmpieza2 && x<=derrapeTermina2))
-                    
+                % Verifica si la velocidad inicial del carro es mayor a la
+                % permitida, en caso de que si sea, se procede a ejecutar
+                % el siguiente bloque de instrucciones gracias al booleano
+                % salir
+                if velocidad>velMax && ...
+                   ((x>=derrapeEmpieza1 && x<=derrapeTermina1) || ...
+                   (x>=derrapeEmpieza2 && x<=derrapeTermina2))
                     
                     salir=true;
                 else
@@ -507,23 +523,30 @@ classdef solucionReto_exported < matlab.apps.AppBase
                     
             end
             
+            % Determina la nueva trayectoria del carro, calcula la
+            % distancia maxima recorrida, asi como el calor que se ha
+            % generado por la friccion y el derrape
             if salir
                 dCurva=matlabFunction(diff(str2sym(app.EcuacionText.Text)));
                 slope = dCurva(x);
                 distancia=(velocidad^2)/(2*G*coef_friccion);
                 energiaPerd=0.5*masa*velocidad^2;
                 [xa,ya]=obtenerPuntosGradas(app,x,y,distancia, slope, true);
-                app.VelocidadmaximaenpuntoactualLabel.Text="Velocidad maxima en punto actual: -";
-                app.EnergiaPerdidaLabel.Text="Energia perdida: "+num2str(energiaPerd)+"J";
+                app.VelmxpermitidaenpuntoactualLabel.Text = ...
+                    "Vel. máx permitida en punto actual: -";
+                app.EnergiaPerdidaLabel.Text="Energia perdida: " + ...
+                    num2str(energiaPerd)+"J";
                 app.EstadoLabel.Text="Estado: Desviado";
-                app.DistanciaderrapadaLabel.Text="Distancia derrapada: "+num2str(distancia)+"m";
+                app.DistanciaderrapadaLabel.Text= ...
+                    "Distancia derrapada: " + num2str(distancia)+"m";
                 line(app.UIAxes,[x xa],[y ya]);
                 for i=x:xa
                     rapidez=app.VelocidadanimacionSlider.Value;
                     y=y+slope;
                     p.YData=y;
                     p.XData=i;
-                    app.PuntoactualLabel.Text="Punto actual: ("+num2str(i)+", "+num2str(y)+")";
+                    app.PuntoactualLabel.Text = ...
+                        "Punto actual: ("+num2str(i)+", "+num2str(y)+")";
                     
                     drawnow;
                     pause(rapidez);
@@ -545,7 +568,7 @@ classdef solucionReto_exported < matlab.apps.AppBase
             else
                 % Change to a 1x2 grid
                 app.GridLayout.RowHeight = {'1x'};
-                app.GridLayout.ColumnWidth = {239, '1x'};
+                app.GridLayout.ColumnWidth = {270, '1x'};
                 app.RightPanel.Layout.Row = 1;
                 app.RightPanel.Layout.Column = 2;
             end
@@ -561,13 +584,13 @@ classdef solucionReto_exported < matlab.apps.AppBase
             % Create UIFigure and hide until all components are created
             app.UIFigure = uifigure('Visible', 'off');
             app.UIFigure.AutoResizeChildren = 'off';
-            app.UIFigure.Position = [100 100 834 572];
+            app.UIFigure.Position = [100 100 839 572];
             app.UIFigure.Name = 'MATLAB App';
             app.UIFigure.SizeChangedFcn = createCallbackFcn(app, @updateAppLayout, true);
 
             % Create GridLayout
             app.GridLayout = uigridlayout(app.UIFigure);
-            app.GridLayout.ColumnWidth = {239, '1x'};
+            app.GridLayout.ColumnWidth = {270, '1x'};
             app.GridLayout.RowHeight = {'1x'};
             app.GridLayout.ColumnSpacing = 0;
             app.GridLayout.RowSpacing = 0;
@@ -650,22 +673,22 @@ classdef solucionReto_exported < matlab.apps.AppBase
             % Create VelocidadanimacionSliderLabel
             app.VelocidadanimacionSliderLabel = uilabel(app.LeftPanel);
             app.VelocidadanimacionSliderLabel.HorizontalAlignment = 'right';
-            app.VelocidadanimacionSliderLabel.Position = [96 139 116 22];
+            app.VelocidadanimacionSliderLabel.Position = [74 139 116 22];
             app.VelocidadanimacionSliderLabel.Text = 'Velocidad animacion';
 
             % Create VelocidadanimacionSlider
             app.VelocidadanimacionSlider = uislider(app.LeftPanel);
             app.VelocidadanimacionSlider.Limits = [0.0003 2];
             app.VelocidadanimacionSlider.MajorTicks = [0.05 0.7 1.35 2];
-            app.VelocidadanimacionSlider.MajorTickLabels = {'Rapido', 'Menos rapido', 'Menos lento', 'Lento'};
+            app.VelocidadanimacionSlider.MajorTickLabels = {'Veloz', '', '', 'Lento'};
             app.VelocidadanimacionSlider.MinorTicks = [0.0003 0.0503 0.1003 0.1503 0.2003 0.2503 0.3003 0.3503 0.4003 0.4503 0.5003 0.5503 0.6003 0.6503 0.7003 0.7503 0.8003 0.8503 0.9003 0.9503 1.0003 1.0503 1.1003 1.1503 1.2003 1.2503 1.3003 1.3503 1.4003 1.4503 1.5003 1.5503 1.6003 1.6503 1.7003 1.7503 1.8003 1.8503 1.9003 1.9503 2];
-            app.VelocidadanimacionSlider.Position = [19 197 267 3];
+            app.VelocidadanimacionSlider.Position = [15 197 234 3];
             app.VelocidadanimacionSlider.Value = 1;
 
-            % Create VelocidadmaximaenpuntoactualLabel
-            app.VelocidadmaximaenpuntoactualLabel = uilabel(app.LeftPanel);
-            app.VelocidadmaximaenpuntoactualLabel.Position = [14 323 289 22];
-            app.VelocidadmaximaenpuntoactualLabel.Text = 'Velocidad maxima en punto actual: ';
+            % Create VelmxpermitidaenpuntoactualLabel
+            app.VelmxpermitidaenpuntoactualLabel = uilabel(app.LeftPanel);
+            app.VelmxpermitidaenpuntoactualLabel.Position = [14 318 289 27];
+            app.VelmxpermitidaenpuntoactualLabel.Text = 'Vel. máx. permitida en punto actual: ';
 
             % Create EstadoLabel
             app.EstadoLabel = uilabel(app.LeftPanel);
@@ -750,10 +773,10 @@ classdef solucionReto_exported < matlab.apps.AppBase
             app.RadiodeCurvatura2Label.Position = [23 363 321 22];
             app.RadiodeCurvatura2Label.Text = 'Radio de Curvatura 2:';
 
-            % Create VelocidadMaximaentodalapistaLabel
-            app.VelocidadMaximaentodalapistaLabel = uilabel(app.RightPanel);
-            app.VelocidadMaximaentodalapistaLabel.Position = [22 302 322 22];
-            app.VelocidadMaximaentodalapistaLabel.Text = 'Velocidad Maxima en toda la pista:';
+            % Create VelmxpermitidaenzonadederrapeLabel
+            app.VelmxpermitidaenzonadederrapeLabel = uilabel(app.RightPanel);
+            app.VelmxpermitidaenzonadederrapeLabel.Position = [22 302 322 22];
+            app.VelmxpermitidaenzonadederrapeLabel.Text = 'Vel. máx permitida en zona de derrape:';
 
             % Create UIAxes
             app.UIAxes = uiaxes(app.RightPanel);
